@@ -1,0 +1,32 @@
+import { Route, Routes } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import SideBar from "./components/SideBar";
+import { SidebarProvider } from "./components/ui/sidebar";
+import Home from "./pages/Home";
+import Footer from "./components/Footer";
+import ProductPage from "./pages/ProductPage";
+
+function App() {
+  return (
+    <>
+      <SidebarProvider defaultOpen={false}>
+        <SideBar />
+        <main className="block w-full h-full overflow-y-auto">
+          <NavBar />
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<ProductPage />} />
+            {/* <Route path="/aboutUs" element={<AboutUs />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />} /> */}
+          </Routes>
+
+          <Footer />
+        </main>
+      </SidebarProvider>
+    </>
+  );
+}
+
+export default App;
