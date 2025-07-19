@@ -24,7 +24,7 @@ export function SideBar() {
               <img
                 src="/smart_food_logo.png"
                 alt="Smart Foods Logo"
-                className="w-15 h-15"
+                className="h-12"
               />
             </div>
           </SidebarHeader>

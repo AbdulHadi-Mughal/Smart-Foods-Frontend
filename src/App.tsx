@@ -5,6 +5,8 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import ProductPage from "./pages/ProductPage";
+import WhyUs from "./pages/WhyUs";
+import SingleProductPage from "./pages/SingleProductPage";
 
 function App() {
   return (
@@ -17,8 +19,14 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductPage />} />
-            {/* <Route path="/aboutUs" element={<AboutUs />} />
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/products/:productId"
+              element={<SingleProductPage />}
+            />
+            <Route path="/WhyUs" element={<WhyUs />} />
+            {/* <Route path="/aboutUs" element={<AboutUs />} /> */}
+
+            {/* <Route path="/" element={<Home />} />
             <Route path="/" element={<Home />} /> */}
           </Routes>
 
