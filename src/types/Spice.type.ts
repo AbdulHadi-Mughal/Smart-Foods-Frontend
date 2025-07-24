@@ -8,6 +8,7 @@ export interface Spice {
   price: number;
   category: Category;
   instruction: string;
+  inStock: boolean;
 }
 
 export type SpiceCardInfo = {

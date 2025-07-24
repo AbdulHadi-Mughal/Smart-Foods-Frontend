@@ -2,18 +2,39 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "../components/ui/sidebar";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
+
+const sidebarItems = [
+  {
+    title: "Home",
+    url: "/",
+    icon: RxHamburgerMenu,
+  },
+  {
+    title: "Products",
+    url: "/products",
+  },
+  {
+    title: "Why Us",
+    url: "/whyUs",
+  },
+];
 
 export function SideBar() {
   const { toggleSidebar } = useSidebar();
 
   return (
-    <div className="fixed z-10 bg-card">
+    <div className="fixed z-50 bg-card">
       <Sidebar>
         <div className="bg-white w-full h-full">
           <SidebarHeader>
@@ -22,17 +43,30 @@ export function SideBar() {
                 <RxHamburgerMenu />
               </Button>
               <img
-                src="/smart_food_logo.png"
+                src="/smart_food_logo.webp"
                 alt="Smart Foods Logo"
                 className="h-12"
               />
             </div>
           </SidebarHeader>
           <SidebarContent>
-            <SidebarGroup />
-            <SidebarGroup />
+            <SidebarGroup>
+              <SidebarGroupLabel>Pages</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {sidebarItems.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <Link to={item.url}>
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter />
         </div>
       </Sidebar>
     </div>

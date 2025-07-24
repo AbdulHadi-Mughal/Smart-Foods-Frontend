@@ -28,7 +28,9 @@ const ProductCard = ({ filteredProducts }: Props) => {
                 <Card className="py-1 w-full flex flex-col justify-between shadow-xl rounded-md border border-gray-200 transition hover:shadow-2xl hover:-translate-y-0.5 duration-300">
                   <img
                     loading="lazy"
-                    src="https://ik.imagekit.io/vqu9cto3v/Product%20Images/FriedChickenPouch.webp?updatedAt=1752732771267"
+                    src={
+                      "https://ik.imagekit.io/vqu9cto3v/Product%20Images/FriedChickenPouch.webp?updatedAt=1752732771267"
+                    }
                     alt={name}
                     className="h-60 w-full object-contain"
                   />
@@ -46,7 +48,9 @@ const ProductCard = ({ filteredProducts }: Props) => {
                         ? `${weight / 1000}kg`
                         : `${weight}g`}
                     </div>
-                    <Button size="sm">Add to Cart</Button>
+                    <Button size="sm" className="mb-1">
+                      Add to Cart
+                    </Button>
                   </CardContent>
                 </Card>
               </Link>

@@ -7,27 +7,29 @@ import Footer from "./components/Footer";
 import ProductPage from "./pages/ProductPage";
 import WhyUs from "./pages/WhyUs";
 import SingleProductPage from "./pages/SingleProductPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   return (
     <>
       <SidebarProvider defaultOpen={false}>
         <SideBar />
-        <main className="block w-full h-full overflow-y-auto">
+        <main className="block w-full h-full ">
           <NavBar />
 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductPage />} />
             <Route
-              path="/products/:productId"
+              path="/products/:productName"
               element={<SingleProductPage />}
             />
             <Route path="/WhyUs" element={<WhyUs />} />
             {/* <Route path="/aboutUs" element={<AboutUs />} /> */}
 
-            {/* <Route path="/" element={<Home />} />
-            <Route path="/" element={<Home />} /> */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
           </Routes>
 
           <Footer />

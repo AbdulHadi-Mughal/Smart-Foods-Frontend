@@ -13,7 +13,7 @@ const ProductPage = () => {
   const serverURL = import.meta.env.VITE_API_BASE_URL || "localhost:3000/api";
 
   const fetchProducts = async () => {
-    const data = await fetch(serverURL);
+    const data = await fetch(`${serverURL}/products`);
     return await data.json();
   };
 
@@ -62,18 +62,6 @@ const ProductPage = () => {
       />
 
       <ProductCard filteredProducts={filteredProducts} />
-
-      {/* <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          h2: (props) => (
-            <h2 className="text-2xl font-extrabold" {...props}></h2>
-          ),
-          h1: (props) => (
-            <h1 className="text-4xl font-extrabold" {...props}></h1>
-          ),
-        }}
-      ></ReactMarkdown> */}
     </div>
   );
 };

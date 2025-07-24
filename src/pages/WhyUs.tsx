@@ -50,7 +50,7 @@ const WhyUs = () => {
           {benefits.map(({ title, description }, index) => (
             <li key={index}>
               <h3 className="text-2xl font-bold tracking-tight lg:text-3xl">
-                • {title}
+                <p className="text-primary inline">•</p> {title}
               </h3>
               <p className="text-lg text-muted-foreground mt-1">
                 {description}
