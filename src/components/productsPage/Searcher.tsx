@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import type { SpiceCardInfo } from "../../types/Spice.type";
+import type { SpiceCardInfo } from "../../types/spice.type";
 
 interface SearcherProps {
   products: SpiceCardInfo[];

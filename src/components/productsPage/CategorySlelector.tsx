@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Category, SpiceCardInfo } from "../../types/Spice.type";
+import type { Category, SpiceCardInfo } from "../../types/spice.type";
 
 type Props = {
   products: SpiceCardInfo[];

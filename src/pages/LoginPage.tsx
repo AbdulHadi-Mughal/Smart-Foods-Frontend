@@ -1,48 +1,75 @@
-import type { FormEvent } from "react";
-import { LoginForm } from "../components/LoginForm";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginForm } from "../components/auth/LoginForm";
+import {
+  loginSchema,
+  type LoginFormData,
+} from "../lib/zodSchemas/login.schema";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { errorToast, successToast } from "../components/global/Toasts";
+import { useState } from "react";
 
 function LoginPage() {
-  const loginUser = async (e: FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e.currentTarget);
-    const formObject = Object.fromEntries(formData);
-    console.log(formObject);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
+  const [invalid, setInvalid] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const RedirectionURL = searchParams.get("from");
+
+  const loginUser = async (data: LoginFormData) => {
     try {
+      const body = JSON.stringify({
+        email: data.email.trim().toLowerCase(),
+        password: data.password,
+      });
+
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/api/users/login`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/login`,
         {
-          method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formObject),
+          method: "POST",
+          body,
         }
       );
-
-      const data = await response.json();
-      console.log("Response from server:", data);
-    } catch (err) {
-      console.error("Error submitting form:", err);
+      if (response.ok) {
+        successToast("Login successful! Redirecting...");
+        setTimeout(() => {
+          navigate(RedirectionURL || "/");
+        }, 1000);
+      } else {
+        setInvalid(true);
+      }
+    } catch {
+      errorToast("Login failed! Please try again later.");
     }
   };
 
   return (
-    <>
-      <div className="bg-zinc-900 w-full h-screen">
-        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-          <div className="w-full max-w-sm">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                loginUser(e);
-              }}
-            >
-              <LoginForm />
-            </form>
-          </div>
+    <div className="w-full h-screen">
+      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-sm">
+          <form onSubmit={handleSubmit(loginUser)}>
+            <LoginForm
+              register={register}
+              errors={errors}
+              isSubmitting={isSubmitting}
+              invalid={invalid}
+            />
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

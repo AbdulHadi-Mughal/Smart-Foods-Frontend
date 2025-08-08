@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 const WhyUsSection = () => {
   return (
-    <section className="w-full bg-white text-foreground pb-12">
+    <section className="w-full bg-white text-foreground py-12">
       <div className="max-w-2xl mx-auto text-center py-8 px-4">
         <h2 className="text-primary text-4xl font-extrabold mb-4">
           Why Choose Smart Foods?
@@ -29,7 +29,7 @@ const WhyUsSection = () => {
         </ul>
 
         <Button asChild size={"lg"}>
-          <Link to="/whyUs">Learn More</Link>
+          <Link to="/why-us">Learn More</Link>
         </Button>
       </div>
     </section>

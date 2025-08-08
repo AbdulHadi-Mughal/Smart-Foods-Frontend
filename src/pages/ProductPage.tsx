@@ -1,8 +1,12 @@
 import Searcher from "../components/productsPage/Searcher";
-import ProductCard from "../components/productsPage/ProductCard";
-import { useEffect, useRef, useState } from "react";
-import type { Category, SpiceCardInfo } from "../types/Spice.type";
+import { lazy, useEffect, useRef, useState } from "react";
+import type { Category, SpiceCardInfo } from "../types/spice.type";
 import CategorySlelector from "../components/productsPage/CategorySlelector";
+import { errorToast } from "@/components/global/Toasts";
+
+const ProductCard = lazy(
+  () => import("../components/productsPage/ProductCard")
+);
 
 const ProductPage = () => {
   const [filteredProducts, setFilteredProducts] = useState<SpiceCardInfo[]>([]);
@@ -10,10 +14,8 @@ const ProductPage = () => {
     SpiceCardInfo[]
   >([]);
 
-  const serverURL = import.meta.env.VITE_API_BASE_URL || "localhost:3000/api";
-
   const fetchProducts = async () => {
-    const data = await fetch(`${serverURL}/products`);
+    const data = await fetch(`${import.meta.env.VITE_API_BASE_URL}/products`);
     return await data.json();
   };
 
@@ -35,15 +37,15 @@ const ProductPage = () => {
     const fetchAndSetProducts = async () => {
       try {
         products.current = await fetchProducts();
-
         setCatagorizedProducts(products.current);
         setFilteredProducts(products.current);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
+      } catch {
+        errorToast("Something went wrong! Please try again later.");
       }
     };
 
     fetchAndSetProducts();
+    import("./SingleProductPage");
   }, []);
 
   return (

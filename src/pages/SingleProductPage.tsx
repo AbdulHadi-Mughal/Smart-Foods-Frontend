@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import type { Spice } from "../types/Spice.type";
+import type { Spice } from "../types/spice.type";
 import { Button } from "../components/ui/button";
 import { Heart } from "lucide-react";
-import Instructions from "../components/SingleProductPage/Instructions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,11 +12,17 @@ import {
   BreadcrumbSeparator,
 } from "../components/ui/breadcrumb";
 import SingleProductPageSkele from "../components/SingleProductPage/SingleProductPageSkele";
+import { infoToast } from "../components/global/Toasts";
+
+const Instructions = lazy(
+  () => import("../components/SingleProductPage/Instructions")
+);
 
 const SingleProductPage = () => {
   const { productName } = useParams();
-  const serverURL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+  const serverURL = import.meta.env.VITE_API_BASE_URL
+    ? `${import.meta.env.VITE_API_BASE_URL}`
+    : "http://localhost:3000/api";
 
   const [product, setProduct] = useState<Spice | null>(null);
 
@@ -32,7 +37,6 @@ const SingleProductPage = () => {
       try {
         const fetched = await fetchProducts();
         setProduct(fetched);
-        console.log(fetched);
       } catch (error) {
         console.error("Failed to fetch product:", error);
       }
@@ -93,7 +97,11 @@ const SingleProductPage = () => {
                 {product.name}
               </h1>
               <div className="flex gap-2">
-                <Button size="icon" variant="outline">
+                <Button
+                  size="icon"
+                  onClick={() => infoToast("Add to Favourites")}
+                  variant="outline"
+                >
                   <Heart className="h-5 w-5" />
                 </Button>
               </div>
@@ -117,11 +125,20 @@ const SingleProductPage = () => {
           </p> */}
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-4">
-              <Button size="lg" className="w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3 sm:justify-evenly pt-4">
+              <Button
+                size="lg"
+                onClick={() => infoToast("Add to Cart")}
+                className="w-full sm:w-2/5"
+              >
                 Add to Cart
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                onClick={() => infoToast("Buy Now")}
+                variant="outline"
+                className="w-full sm:w-2/5"
+              >
                 Buy Now
               </Button>
             </div>

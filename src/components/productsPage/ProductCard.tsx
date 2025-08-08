@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import type { SpiceCardInfo } from "../../types/Spice.type.ts";
+import type { SpiceCardInfo } from "../../types/spice.type.ts";
 import { Button } from "../ui/button.tsx";
 import { Card, CardContent } from "../ui/card.tsx";
-import ProductCardSkeleton from "../ProductCardSkeleton.tsx";
+import ProductCardSkeleton from "./ProductCardSkeleton.tsx";
+import { infoToast } from "../global/Toasts.tsx";
 
 type Props = {
   filteredProducts: SpiceCardInfo[];
@@ -13,19 +14,19 @@ const ProductCard = ({ filteredProducts }: Props) => {
     <div className="container mx-auto px-1 md:px-4 lg:px-6">
       {filteredProducts.length === 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-4 lg:gap-6">
-          {Array.from({ length: 4 }).map((_, idx) => (
-            <ProductCardSkeleton key={idx} />
+          {Array.from({ length: 4 }).map((_, id) => (
+            <ProductCardSkeleton key={`skeleton-${id}`} />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-4 lg:gap-6">
           {filteredProducts.map(
-            ({ id, name, shortDescription, price, weight }) => (
+            ({ _id, name, shortDescription, price, weight }) => (
               <Link
                 to={`/products/${name.replaceAll(" ", "-")}`}
-                key={"product-" + id}
+                key={"product-" + _id}
               >
-                <Card className="py-1 w-full flex flex-col justify-between shadow-xl rounded-md border border-gray-200 transition hover:shadow-2xl hover:-translate-y-0.5 duration-300">
+                <Card className="py-1 w-full flex flex-col justify-between shadow-xl md:shadow-lg lg:shadow-md rounded-md border border-gray-200 transition hover:shadow-2xl hover:-translate-y-0.5 duration-300">
                   <img
                     loading="lazy"
                     src={
@@ -48,7 +49,15 @@ const ProductCard = ({ filteredProducts }: Props) => {
                         ? `${weight / 1000}kg`
                         : `${weight}g`}
                     </div>
-                    <Button size="sm" className="mb-1">
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent the Link navigation
+                        e.stopPropagation(); // Stop the click event from reaching the Link
+                        infoToast("Add to Cart");
+                      }}
+                      size="sm"
+                      className="mb-1"
+                    >
                       Add to Cart
                     </Button>
                   </CardContent>

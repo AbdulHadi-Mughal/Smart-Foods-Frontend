@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { Category } from "../../types/Spice.type";
+import type { Category } from "../../types/spice.type";
 
 type Props = {
   name: string;
@@ -22,8 +22,6 @@ const Instructions = ({
     "description"
   );
   const selectedView = view === "description" ? description : instructions;
-
-  console.log(instructions);
 
   return (
     <div className="my-4">

@@ -1,54 +1,87 @@
-import type { FormEvent } from "react";
-import SignupForm from "../components/SignupForm";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import SignupForm from "../components/auth/SignupForm";
+import {
+  signupSchema,
+  type SignupFormData,
+} from "../lib/zodSchemas/signup.schema";
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { errorToast, successToast } from "../components/global/Toasts";
 
 function SignupPage() {
-  const createUser = async (e: FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e.currentTarget);
-    const formObject = Object.fromEntries(formData);
-    const { name, email, password } = formObject;
-    console.log(formObject);
-    if (formObject.password !== formObject.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+  });
+
+  const [userExists, setUserExists] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const RedirectionURL = searchParams.get("from");
+
+  const onSubmit = async (formData: SignupFormData) => {
+    const { username, email, password, city, phoneNumber } = formData;
+
     try {
-      console.log(formObject);
-      console.log(import.meta.env.VITE_SERVER_BASE_URL);
+      const body = JSON.stringify({
+        username: username.toString().trim(),
+        email: email.toString().trim().toLowerCase(),
+        password: password.toString().trim(),
+        city: city.toString().trim(),
+        phoneNumber: phoneNumber
+          ?.toString()
+          .trim()
+          .replaceAll(" ", "")
+          .replaceAll("-", ""),
+      });
+
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/api/users/signup`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/signup`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ name: name, email: email, password }),
+          credentials: "include",
+          body,
         }
       );
 
       const data = await response.json();
-      console.log("Response from server:", data);
-    } catch (err) {
-      console.error("Error submitting form:", err);
+      if (response.ok) {
+        successToast("Signup successful! Redirecting...");
+        setTimeout(() => {
+          navigate(RedirectionURL || "/");
+        }, 1000);
+      } else if (data && data.existingUser) {
+        setUserExists(true);
+      }
+    } catch {
+      errorToast("Something went wrong! Please try again later.");
     }
   };
 
   return (
-    <>
-      <div className="w-full h-screen">
-        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-          <div className="w-full max-w-sm">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                createUser(e);
-              }}
-            >
-              <SignupForm />
-            </form>
-          </div>
+    <div className="w-full">
+      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-sm">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <SignupForm
+              register={register}
+              errors={errors}
+              existingUser={userExists}
+              setUserExists={setUserExists}
+              isSubmitting={isSubmitting}
+            />
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

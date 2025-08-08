@@ -1,23 +1,35 @@
 import { Route, Routes } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import SideBar from "./components/SideBar";
+import NavBar from "./components/global/NavBar";
+import SideBar from "./components/global/SideBar";
 import { SidebarProvider } from "./components/ui/sidebar";
+import Footer from "./components/global/Footer";
+import { Toaster } from "./components/ui/sonner";
+import RouteChange from "./components/global/RouteChanges";
+import { Suspense, lazy } from "react";
 import Home from "./pages/Home";
-import Footer from "./components/Footer";
 import ProductPage from "./pages/ProductPage";
-import WhyUs from "./pages/WhyUs";
-import SingleProductPage from "./pages/SingleProductPage";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
+import { useServerWarmup } from "./functions/severWarmup";
+
+// Lazy-loaded pages
+const WhyUs = lazy(() => import("./pages/WhyUs"));
+const SingleProductPage = lazy(() => import("./pages/SingleProductPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const SignupPage = lazy(() => import("./pages/SignupPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
 function App() {
-  return (
-    <>
-      <SidebarProvider defaultOpen={false}>
-        <SideBar />
-        <main className="block w-full h-full ">
-          <NavBar />
+  useServerWarmup();
 
+  return (
+    <SidebarProvider defaultOpen={false}>
+      <RouteChange />
+      <SideBar />
+      <main className="block w-full h-full">
+        <NavBar />
+
+        <Suspense
+          fallback={<div className="p-4 text-muted-foreground">Loading...</div>}
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductPage />} />
@@ -25,17 +37,19 @@ function App() {
               path="/products/:productName"
               element={<SingleProductPage />}
             />
-            <Route path="/WhyUs" element={<WhyUs />} />
-            {/* <Route path="/aboutUs" element={<AboutUs />} /> */}
+            <Route path="/why-us" element={<WhyUs />} />
 
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/sign-in" element={<LoginPage />} />
+            <Route path="/create-account" element={<SignupPage />} />
+
+            <Route path="/users/me" element={<ProfilePage />} />
           </Routes>
+        </Suspense>
 
-          <Footer />
-        </main>
-      </SidebarProvider>
-    </>
+        <Footer />
+        <Toaster />
+      </main>
+    </SidebarProvider>
   );
 }
 
