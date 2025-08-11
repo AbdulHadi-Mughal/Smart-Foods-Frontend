@@ -10,6 +10,9 @@ type Props = {
 };
 
 const ProductCard = ({ filteredProducts }: Props) => {
+
+  
+
   return (
     <div className="container mx-auto px-1 md:px-4 lg:px-6">
       {filteredProducts.length === 0 ? (
@@ -53,7 +56,7 @@ const ProductCard = ({ filteredProducts }: Props) => {
                       onClick={(e) => {
                         e.preventDefault(); // Prevent the Link navigation
                         e.stopPropagation(); // Stop the click event from reaching the Link
-                        infoToast("Add to Cart");
+                        
                       }}
                       size="sm"
                       className="mb-1"
