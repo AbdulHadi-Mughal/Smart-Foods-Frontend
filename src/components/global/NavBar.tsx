@@ -10,7 +10,7 @@ const NavBar = () => {
             <img
               src="/smart_food_logo.webp"
               alt="Smart Foods Logo"
-              className="h-10 md:h-11 lg:h-12 px-2"
+              className="h-10 md:h-11 lg:h-12 pl-2 pr-1"
             />
             <h1 className="text-md font-bold">The Smart Foods</h1>
           </div>

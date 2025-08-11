@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import type { SpiceCardInfo } from "../../types/spice.type.ts";
-import { Button } from "../ui/button.tsx";
 import { Card, CardContent } from "../ui/card.tsx";
 import ProductCardSkeleton from "./ProductCardSkeleton.tsx";
-import { infoToast } from "../global/Toasts.tsx";
 
 type Props = {
   filteredProducts: SpiceCardInfo[];
@@ -52,17 +50,6 @@ const ProductCard = ({ filteredProducts }: Props) => {
                         ? `${weight / 1000}kg`
                         : `${weight}g`}
                     </div>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent the Link navigation
-                        e.stopPropagation(); // Stop the click event from reaching the Link
-                        
-                      }}
-                      size="sm"
-                      className="mb-1"
-                    >
-                      Add to Cart
-                    </Button>
                   </CardContent>
                 </Card>
               </Link>

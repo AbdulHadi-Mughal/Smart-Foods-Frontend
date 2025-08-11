@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 
 const ProductCardSkeleton = () => {
@@ -15,9 +15,9 @@ const ProductCardSkeleton = () => {
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-between px-4 pb-2">
+      {/* <CardFooter className="flex justify-between px-4 pb-2">
         <Skeleton className="w-6 h-4 rounded-2xl" />
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };

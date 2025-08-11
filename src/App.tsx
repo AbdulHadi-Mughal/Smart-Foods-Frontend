@@ -9,6 +9,7 @@ import { Suspense, lazy } from "react";
 import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
 import { useServerWarmup } from "./functions/severWarmup";
+import LoadSpinner from "./components/global/Spinner";
 
 // Lazy-loaded pages
 const WhyUs = lazy(() => import("./pages/WhyUs"));
@@ -27,24 +28,25 @@ function App() {
       <main className="block w-full h-full">
         <NavBar />
 
-        <Suspense
-          fallback={<div className="p-4 text-muted-foreground">Loading...</div>}
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<ProductPage />} />
-            <Route
-              path="/products/:productName"
-              element={<SingleProductPage />}
-            />
-            <Route path="/why-us" element={<WhyUs />} />
+        <div className="min-h-4/5">
+          <Suspense fallback={<LoadSpinner />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
 
-            <Route path="/sign-in" element={<LoginPage />} />
-            <Route path="/create-account" element={<SignupPage />} />
+              <Route path="/products" element={<ProductPage />} />
+              <Route
+                path="/products/:productName"
+                element={<SingleProductPage />}
+              />
+              <Route path="/why-us" element={<WhyUs />} />
 
-            <Route path="/users/me" element={<ProfilePage />} />
-          </Routes>
-        </Suspense>
+              <Route path="/sign-in" element={<LoginPage />} />
+              <Route path="/create-account" element={<SignupPage />} />
+
+              <Route path="/users/me" element={<ProfilePage />} />
+            </Routes>
+          </Suspense>
+        </div>
 
         <Footer />
         <Toaster />

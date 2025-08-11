@@ -5,7 +5,7 @@ const ProductPageSkeleton = () => {
     <div>
       {/* Breadcrumb */}
       <div className="text-white mx-4 text-sm mb-2">
-        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-4 w-1/4" />
       </div>
 
       {/* Container */}

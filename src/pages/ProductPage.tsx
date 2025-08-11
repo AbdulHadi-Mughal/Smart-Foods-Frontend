@@ -1,12 +1,10 @@
 import Searcher from "../components/productsPage/Searcher";
-import { lazy, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Category, SpiceCardInfo } from "../types/spice.type";
 import CategorySlelector from "../components/productsPage/CategorySlelector";
 import { errorToast } from "@/components/global/Toasts";
 
-const ProductCard = lazy(
-  () => import("../components/productsPage/ProductCard")
-);
+import ProductCard from "../components/productsPage/ProductCard";
 
 const ProductPage = () => {
   const [filteredProducts, setFilteredProducts] = useState<SpiceCardInfo[]>([]);

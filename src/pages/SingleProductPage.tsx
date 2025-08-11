@@ -1,4 +1,4 @@
-import { lazy, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Spice } from "../types/spice.type";
 import { Button } from "../components/ui/button";
@@ -14,9 +14,8 @@ import {
 import SingleProductPageSkele from "../components/SingleProductPage/SingleProductPageSkele";
 import { infoToast } from "../components/global/Toasts";
 
-const Instructions = lazy(
-  () => import("../components/SingleProductPage/Instructions")
-);
+import Instructions from "@/components/SingleProductPage/Instructions";
+import { Drawer } from "@/components/ui/drawer";
 
 const SingleProductPage = () => {
   const { productName } = useParams();
@@ -51,6 +50,8 @@ const SingleProductPage = () => {
 
   return (
     <div>
+      <Drawer></Drawer>
+
       <Breadcrumb className="text-white mx-4 text-sm">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -157,3 +158,5 @@ const SingleProductPage = () => {
 };
 
 export default SingleProductPage;
+
+//This is the single product page, which showcases all details before buying. I want to have a drawer opened when the "Add to cart " or "buy now" button is pressed which shows options to change amount, weight per amount and shows the total calculated price. Make three options for weight: the product's listed weight,
