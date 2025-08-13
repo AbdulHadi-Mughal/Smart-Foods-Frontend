@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router-dom";
+import { ImageKitProvider } from "@imagekit/react";
+
 import NavBar from "./components/global/NavBar";
 import SideBar from "./components/global/SideBar";
 import { SidebarProvider } from "./components/ui/sidebar";
@@ -23,34 +25,36 @@ function App() {
 
   return (
     <SidebarProvider defaultOpen={false}>
-      <RouteChange />
-      <SideBar />
-      <main className="block w-full h-full">
-        <NavBar />
+      <ImageKitProvider urlEndpoint="https://ik.imagekit.io/vqu9cto3v">
+        <RouteChange />
+        <SideBar />
+        <main className="block w-full h-full">
+          <NavBar />
 
-        <div className="min-h-4/5">
-          <Suspense fallback={<LoadSpinner />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
+          <div className="min-h-4/5">
+            <Suspense fallback={<LoadSpinner />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
 
-              <Route path="/products" element={<ProductPage />} />
-              <Route
-                path="/products/:productName"
-                element={<SingleProductPage />}
-              />
-              <Route path="/why-us" element={<WhyUs />} />
+                <Route path="/products" element={<ProductPage />} />
+                <Route
+                  path="/products/:productName"
+                  element={<SingleProductPage />}
+                />
+                <Route path="/why-us" element={<WhyUs />} />
 
-              <Route path="/sign-in" element={<LoginPage />} />
-              <Route path="/create-account" element={<SignupPage />} />
+                <Route path="/sign-in" element={<LoginPage />} />
+                <Route path="/create-account" element={<SignupPage />} />
 
-              <Route path="/users/me" element={<ProfilePage />} />
-            </Routes>
-          </Suspense>
-        </div>
+                <Route path="/users/me" element={<ProfilePage />} />
+              </Routes>
+            </Suspense>
+          </div>
 
-        <Footer />
-        <Toaster />
-      </main>
+          <Footer />
+          <Toaster />
+        </main>
+      </ImageKitProvider>
     </SidebarProvider>
   );
 }

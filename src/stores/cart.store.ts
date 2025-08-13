@@ -1,14 +1,34 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { CartItem, CartStore } from "@/types/cart.type";
 
-export const cartStore = create<CartStore>((set) => ({
-  cartItems: [],
-  addItem: (item: CartItem) =>
-    set((state) => ({
-      cartItems: [...state.cartItems, item],
-    })),
-  removeItem: (deletedItem: string) =>
-    set((state) => ({
-      cartItems: state.cartItems.filter(({ name }) => name !== deletedItem),
-    })),
-}));
+// Persistent cart store with localStorage
+export const cartStore = create<CartStore>()(
+  persist(
+    (set) => ({
+      cartItems: [],
+
+      addItem: (item: CartItem) =>
+        set((state) => ({
+          cartItems: [...state.cartItems, item],
+        })),
+
+      removeItem: (deletedItem: string) =>
+        set((state) => ({
+          cartItems: state.cartItems.filter(({ name }) => name !== deletedItem),
+        })),
+
+      editItem: (editedItem: CartItem) =>
+        set((state) => ({
+          cartItems: state.cartItems.map((item) =>
+            item.name === editedItem.name && item.weight === editedItem.weight
+              ? { ...item, ...editedItem }
+              : item
+          ),
+        })),
+    }),
+    {
+      name: "cart-storage", // key in localStorage
+    }
+  )
+);

@@ -24,8 +24,8 @@ const Instructions = ({
   const selectedView = view === "description" ? description : instructions;
 
   return (
-    <div className="my-4">
-      <div className="flex justify-center mb-4">
+    <div className="mb-4 mt-8">
+      <div className="flex justify-center">
         <button
           className={`${
             view === "description"
@@ -112,7 +112,7 @@ const Instructions = ({
                   <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm">
                     {name}
                   </td>
-                  <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-muted-foreground">
+                  <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm">
                     {weight % 1000 === 0
                       ? `${weight / 1000} kg`
                       : `${weight} grams`}

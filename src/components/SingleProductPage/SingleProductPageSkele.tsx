@@ -25,9 +25,6 @@ const ProductPageSkeleton = () => {
               </div>
             </div>
 
-            {/* Stock Status */}
-            <Skeleton className="h-4 w-24" />
-
             {/* Price */}
             <Skeleton className="h-5 w-32" />
 

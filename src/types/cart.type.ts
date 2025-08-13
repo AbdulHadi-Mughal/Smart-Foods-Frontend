@@ -8,4 +8,5 @@ export type CartStore = {
   cartItems: CartItem[];
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
+  editItem: (editedItem: CartItem) => void;
 };

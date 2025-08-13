@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Spice } from "../types/spice.type";
 import { Button } from "../components/ui/button";
@@ -12,10 +12,12 @@ import {
   BreadcrumbSeparator,
 } from "../components/ui/breadcrumb";
 import SingleProductPageSkele from "../components/SingleProductPage/SingleProductPageSkele";
-import { infoToast } from "../components/global/Toasts";
+import { infoToast, successToast } from "../components/global/Toasts";
 
 import Instructions from "@/components/SingleProductPage/Instructions";
-import { Drawer } from "@/components/ui/drawer";
+import CartDrawer from "@/components/SingleProductPage/CartDrawer";
+import { Image } from "@imagekit/react";
+import { cartStore } from "@/stores/cart.store";
 
 const SingleProductPage = () => {
   const { productName } = useParams();
@@ -24,6 +26,8 @@ const SingleProductPage = () => {
     : "http://localhost:3000/api";
 
   const [product, setProduct] = useState<Spice | null>(null);
+
+  const { cartItems, removeItem } = cartStore();
 
   const fetchProducts = async () => {
     const res = await fetch(`${serverURL}/products/${productName}`);
@@ -44,14 +48,34 @@ const SingleProductPage = () => {
     fetchAndSetProducts();
   }, []);
 
+  const inCart = useMemo(() => {
+    if (!product) return false;
+    return cartItems.some(
+      (item) => item.name === product.name && item.weight === product.weight
+    );
+  }, [cartItems, product]);
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerType, setDrawerType] = useState<"Add to Cart" | "Buy Now">(
+    "Add to Cart"
+  );
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
   if (!product) {
     return <SingleProductPageSkele />;
   }
 
   return (
     <div>
-      <Drawer></Drawer>
-
+      <CartDrawer
+        drawerType={drawerType}
+        product={product}
+        isOpen={drawerOpen}
+        onClose={handleDrawerClose}
+      />
       <Breadcrumb className="text-white mx-4 text-sm">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -77,12 +101,10 @@ const SingleProductPage = () => {
           {/* Product Image */}
           <div className="w-full md:w-1/2 py-2 rounded-2xl shadow-md object-contain bg-white flex justify-center">
             {product.imageUrl ? (
-              <img
+              <Image
                 crossOrigin="anonymous"
-                src={
-                  "https://ik.imagekit.io/vqu9cto3v/Product%20Images/FriedChickenPouch.webp?updatedAt=1752732771267"
-                }
-                className="w-auto h-80 "
+                src={product.imageUrl}
+                className="w-auto h-80"
               />
             ) : (
               <p className="text-center text-lg text-muted-foreground">
@@ -92,7 +114,7 @@ const SingleProductPage = () => {
           </div>
 
           {/* Product Info */}
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 space-y-1">
             <div className="flex items-start justify-between">
               <h1 className="text-2xl font-bold leading-tight">
                 {product.name}
@@ -110,35 +132,51 @@ const SingleProductPage = () => {
 
             {/* Stock Info */}
             <p
-              className={`text-md font-medium my-2 ${
-                product.inStock ? "text-green-600" : "text-red-600"
+              className={`text-md font-medium my-1 ${
+                product.inStock ? "hidden" : "text-red-600"
               }`}
             >
-              {product.inStock ? "In Stock" : "Out of Stock"}
+              Out of Stock
             </p>
-            <p className="text-xl font-bold my-2 text-primary">
+            <p className="text-xl font-bold my-1 text-primary">
               Rs. {product.price}
             </p>
-            {/* <p className="text-md font-medium my-2">
-            {product.weight % 1000 === 0
-              ? `${product.weight / 1000} kg`
-              : `${product.weight} g`}
-          </p> */}
+            {inCart && (
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-green-600 mr-2">Added to Cart.</p>
+                <p
+                  onClick={() => {
+                    removeItem(product.name);
+                    successToast("Removed from Cart");
+                  }}
+                  className="text-sm cursor-pointer underline"
+                >
+                  Remove
+                </p>
+              </div>
+            )}
 
-            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:justify-evenly pt-4">
               <Button
                 size="lg"
-                onClick={() => infoToast("Add to Cart")}
+                onClick={() => {
+                  setDrawerType("Add to Cart");
+                  setDrawerOpen(true);
+                }}
                 className="w-full sm:w-2/5"
+                disabled={!product.inStock}
               >
                 Add to Cart
               </Button>
               <Button
                 size="lg"
-                onClick={() => infoToast("Buy Now")}
-                variant="outline"
+                onClick={() => {
+                  setDrawerType("Buy Now");
+                  setDrawerOpen(true);
+                }}
+                variant="secondary"
                 className="w-full sm:w-2/5"
+                disabled={!product.inStock}
               >
                 Buy Now
               </Button>
@@ -158,5 +196,3 @@ const SingleProductPage = () => {
 };
 
 export default SingleProductPage;
-
-//This is the single product page, which showcases all details before buying. I want to have a drawer opened when the "Add to cart " or "buy now" button is pressed which shows options to change amount, weight per amount and shows the total calculated price. Make three options for weight: the product's listed weight,
