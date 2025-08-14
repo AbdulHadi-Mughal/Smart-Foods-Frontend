@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Facebook from "/brandIcons/facebook.svg"; // Ensure you have the correct path to your Facebook icon
+import { Image } from "@imagekit/react";
 
 const Footer = () => {
   return (
@@ -7,9 +8,9 @@ const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-4 py-14 text-gray-700 max-w-7xl">
         {/* Column 1: Brand Info */}
         <div className="flex items-start space-x-3 my-2 px-4 py-2 border-r border-r-gray-200">
-          <img
+          <Image
             loading="lazy"
-            src="/smart_food_logo.webp"
+            src="/Static%20Files/smart_food_logo.webp"
             alt="The Smart Foods"
             className="h-8"
           />

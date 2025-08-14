@@ -28,7 +28,7 @@ const ProductCard = ({ filteredProducts }: Props) => {
                 <Card className="py-1 w-full flex flex-col justify-between shadow-xl md:shadow-lg lg:shadow-md rounded-md border border-gray-200 transition hover:shadow-2xl hover:-translate-y-0.5 duration-300">
                   <Image
                     loading="lazy"
-                    src={imageUrl}
+                    src={imageUrl + "?tr=h-300"}
                     alt={name}
                     className="h-60 w-full object-contain"
                   />

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
+import { Image } from "@imagekit/react";
 
 const HeroSection = () => {
   return (
@@ -29,9 +30,9 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-      <img
-        src="/Hero_Smart_Foods.webp"
-        loading="lazy"
+      <Image
+        src={`/Static%20Files/Hero_Smart_Foods.webp?tr=w-${window.innerWidth}`}
+        loading="eager"
         className="w-full pt-6 shadow-xl"
       />
     </section>

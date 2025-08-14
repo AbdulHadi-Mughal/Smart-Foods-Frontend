@@ -41,6 +41,7 @@ export function LoginForm({
             <div className="grid gap-3">
               <Label htmlFor="email">Email</Label>
               <Input
+                autoComplete="email"
                 id="email"
                 type="email"
                 {...register("email")}
@@ -61,7 +62,12 @@ export function LoginForm({
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" {...register("password")} />
+              <Input
+                autoComplete="current-password"
+                id="password"
+                type="password"
+                {...register("password")}
+              />
               {errors.password && (
                 <p className="text-sm text-red-600">
                   {errors.password.message}

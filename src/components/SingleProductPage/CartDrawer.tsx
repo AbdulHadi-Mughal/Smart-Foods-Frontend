@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerFooter,
   DrawerTitle,
 } from "@/components/ui/drawer";
@@ -13,17 +14,20 @@ import type { Spice } from "@/types/spice.type";
 import { CustomWeightPicker } from "./CustomWeights";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { CartUpdateDialog } from "./CartUpdateDialog";
 import { successToast } from "../global/Toasts";
 
 interface CartDrawerProps {
-  drawerType: "Add to Cart" | "Buy Now";
+  setSameCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setNewItem: React.Dispatch<React.SetStateAction<CartItem | null>>;
+  drawerType: "Add to Cart" | "Buy Now" | "Edit Cart Item";
   isOpen: boolean;
   onClose: () => void;
   product: Spice;
 }
 
 export default function CartDrawer({
+  setSameCartOpen,
+  setNewItem,
   drawerType,
   isOpen,
   onClose,
@@ -34,17 +38,14 @@ export default function CartDrawer({
   const [selectedWeight, setSelectedWeight] = useState(product.weight);
   const [weightType, setWeightType] = useState<"fixed" | "custom">("fixed");
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const [sameCartOpen, setSameCartOpen] = useState(false);
 
   const totalPrice = useMemo(() => {
     const pricePerGram = product.price / product.weight;
     return (pricePerGram * selectedWeight * quantity).toFixed(2);
   }, [selectedWeight, quantity, product.price, product.weight]);
 
-  let newItem: CartItem | null = null;
-
   const handleAddToCart = () => {
-    newItem = {
+    const newItem = {
       name: product.name,
       price: parseFloat(totalPrice),
       weight: selectedWeight,
@@ -57,6 +58,7 @@ export default function CartDrawer({
     );
 
     if (existingItemIndex !== -1) {
+      setNewItem(newItem);
       setSameCartOpen(true);
       return;
     }
@@ -64,18 +66,11 @@ export default function CartDrawer({
     addItem(newItem);
     successToast(`Added ${newItem.name} to cart!`);
     onClose();
-    setTimeout(() => {
-      onClose();
-    }, 1000);
+    onClose();
   };
 
   return (
     <>
-      <CartUpdateDialog
-        open={sameCartOpen}
-        onClose={() => setSameCartOpen(false)}
-        newItem={newItem}
-      />
       <Drawer open={isOpen} onOpenChange={onClose}>
         <DrawerContent className="pb-4 pt-2 px-4 max-w-2xl mx-auto">
           <DrawerTitle className="text-lg font-semibold text-center hidden sm:block pb-4">
@@ -91,7 +86,7 @@ export default function CartDrawer({
                   className="max-w-40 object-cover rounded"
                 />
                 <div className="text-center">
-                  <h1 className="sm:hidden">{product.name}</h1>
+                  <DrawerDescription>{product.name}</DrawerDescription>
                   {!product.inStock && (
                     <p className="text-md font-bold text-red-600">
                       Out of Stock

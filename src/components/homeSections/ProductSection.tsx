@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
+import { Image } from "@imagekit/react";
 
 const ProductSection = () => {
   return (
@@ -20,10 +21,10 @@ const ProductSection = () => {
           </div>
         </div>
       </div>
-      <img
-        src="/Spices.webp"
+      <Image
+        src={`/Static%20Files/Spices.webp?tr=w-${window.innerWidth}`}
         loading="lazy"
-        className="order-1 w-full shadow-xl"
+        className="order-1 w-screen h-auto shadow-xl"
       />
     </section>
   );

@@ -18,14 +18,18 @@ import Instructions from "@/components/SingleProductPage/Instructions";
 import CartDrawer from "@/components/SingleProductPage/CartDrawer";
 import { Image } from "@imagekit/react";
 import { cartStore } from "@/stores/cart.store";
+import { CartUpdateDialog } from "@/components/SingleProductPage/CartUpdateDialog";
+import type { CartItem } from "@/types/cart.type";
 
 const SingleProductPage = () => {
   const { productName } = useParams();
   const serverURL = import.meta.env.VITE_API_BASE_URL
-    ? `${import.meta.env.VITE_API_BASE_URL}`
+    ? import.meta.env.VITE_API_BASE_URL
     : "http://localhost:3000/api";
 
   const [product, setProduct] = useState<Spice | null>(null);
+  const [sameCartOpen, setSameCartOpen] = useState(false);
+  const [newItem, setNewItem] = useState<CartItem | null>(null);
 
   const { cartItems, removeItem } = cartStore();
 
@@ -46,7 +50,7 @@ const SingleProductPage = () => {
     };
 
     fetchAndSetProducts();
-  }, []);
+  }, [productName]);
 
   const inCart = useMemo(() => {
     if (!product) return false;
@@ -56,13 +60,11 @@ const SingleProductPage = () => {
   }, [cartItems, product]);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerType, setDrawerType] = useState<"Add to Cart" | "Buy Now">(
-    "Add to Cart"
-  );
+  const [drawerType, setDrawerType] = useState<
+    "Add to Cart" | "Buy Now" | "Edit Cart Item"
+  >("Add to Cart");
 
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
-  };
+  console.log(drawerOpen);
 
   if (!product) {
     return <SingleProductPageSkele />;
@@ -71,10 +73,22 @@ const SingleProductPage = () => {
   return (
     <div>
       <CartDrawer
+        setNewItem={setNewItem}
+        setSameCartOpen={setSameCartOpen}
         drawerType={drawerType}
         product={product}
         isOpen={drawerOpen}
-        onClose={handleDrawerClose}
+        onClose={() => setDrawerOpen(false)}
+      />
+      <CartUpdateDialog
+        onClose={(cancel: boolean) => {
+          setSameCartOpen(false);
+          if (cancel) return;
+          setDrawerOpen(false);
+          successToast("Cart updated successfully!");
+        }}
+        newItem={newItem}
+        sameCartOpen={sameCartOpen}
       />
       <Breadcrumb className="text-white mx-4 text-sm">
         <BreadcrumbList>
@@ -103,7 +117,7 @@ const SingleProductPage = () => {
             {product.imageUrl ? (
               <Image
                 crossOrigin="anonymous"
-                src={product.imageUrl}
+                src={product.imageUrl + "?tr=h-300"}
                 className="w-auto h-80"
               />
             ) : (
@@ -131,19 +145,27 @@ const SingleProductPage = () => {
             </div>
 
             {/* Stock Info */}
-            <p
-              className={`text-md font-medium my-1 ${
-                product.inStock ? "hidden" : "text-red-600"
-              }`}
-            >
-              Out of Stock
-            </p>
+            {!product.inStock && (
+              <p className="text-md font-medium my-1 text-red-600">
+                Out of Stock
+              </p>
+            )}
             <p className="text-xl font-bold my-1 text-primary">
               Rs. {product.price}
             </p>
             {inCart && (
               <div className="flex items-center gap-2">
                 <p className="text-sm text-green-600 mr-2">Added to Cart.</p>
+                <p
+                  onClick={() => {
+                    setDrawerType("Edit Cart Item");
+                    setDrawerOpen(true);
+                    successToast(`${product.name} removed from Cart`);
+                  }}
+                  className="text-sm cursor-pointer underline"
+                >
+                  Remove
+                </p>
                 <p
                   onClick={() => {
                     removeItem(product.name);

@@ -25,31 +25,29 @@ function App() {
 
   return (
     <SidebarProvider defaultOpen={false}>
-      <ImageKitProvider urlEndpoint="https://ik.imagekit.io/vqu9cto3v">
+      <ImageKitProvider urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL}>
         <RouteChange />
         <SideBar />
         <main className="block w-full h-full">
           <NavBar />
 
-          <div className="min-h-4/5">
-            <Suspense fallback={<LoadSpinner />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
+          <Suspense fallback={<LoadSpinner />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
 
-                <Route path="/products" element={<ProductPage />} />
-                <Route
-                  path="/products/:productName"
-                  element={<SingleProductPage />}
-                />
-                <Route path="/why-us" element={<WhyUs />} />
+              <Route path="/products" element={<ProductPage />} />
+              <Route
+                path="/products/:productName"
+                element={<SingleProductPage />}
+              />
+              <Route path="/why-us" element={<WhyUs />} />
 
-                <Route path="/sign-in" element={<LoginPage />} />
-                <Route path="/create-account" element={<SignupPage />} />
+              <Route path="/sign-in" element={<LoginPage />} />
+              <Route path="/create-account" element={<SignupPage />} />
 
-                <Route path="/users/me" element={<ProfilePage />} />
-              </Routes>
-            </Suspense>
-          </div>
+              <Route path="/users/me" element={<ProfilePage />} />
+            </Routes>
+          </Suspense>
 
           <Footer />
           <Toaster />

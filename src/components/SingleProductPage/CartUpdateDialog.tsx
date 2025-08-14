@@ -1,24 +1,24 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import type { CartItem } from "@/types/cart.type";
 import { cartStore } from "@/stores/cart.store";
+import { Link } from "react-router-dom";
 
 interface CartUpdateDialogProps {
-  open: boolean;
-  onClose: () => void;
+  sameCartOpen: boolean;
+  onClose: (cancel: boolean) => void;
   newItem: CartItem | null;
 }
 
 export function CartUpdateDialog({
-  open,
+  sameCartOpen,
   onClose,
   newItem,
 }: CartUpdateDialogProps) {
@@ -28,25 +28,27 @@ export function CartUpdateDialog({
 
   const handleUpdate = () => {
     editItem(newItem);
-    onClose();
+    onClose(false);
   };
 
-  console.log(open);
-
   return (
-    <Dialog open={open}>
-      <DialogContent>
+    <Dialog open={sameCartOpen} onOpenChange={onClose}>
+      <DialogContent aria-describedby="dialog-description">
+        <DialogTrigger></DialogTrigger>
         <DialogHeader>
           <DialogTitle>Item Already in Cart</DialogTitle>
         </DialogHeader>
 
-        <p className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           The item <strong>{newItem.name}</strong> is already in your cart. Do
           you want to update it with the new details or cancel this action?
-        </p>
+          <Link to="/cart" className="underline ml-1">
+            See Cart
+          </Link>
+        </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={() => onClose(true)}>
             Cancel
           </Button>
           <Button onClick={handleUpdate}>Update Cart</Button>

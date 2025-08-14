@@ -45,7 +45,12 @@ export function SignupForm({
             {/* Username */}
             <div className="grid gap-3">
               <Label htmlFor="username">Username</Label>
-              <Input id="username" type="text" {...register("username")} />
+              <Input
+                id="username"
+                type="text"
+                {...register("username")}
+                autoComplete="username"
+              />
               {errors.username && (
                 <p className="text-sm text-red-500">
                   {errors.username.message}
@@ -57,6 +62,7 @@ export function SignupForm({
             <div className="grid gap-3">
               <Label htmlFor="email">Email</Label>
               <Input
+                autoComplete="email"
                 id="email"
                 type="email"
                 placeholder="e.g: example@gmail.com"
@@ -80,7 +86,12 @@ export function SignupForm({
             {/* Password */}
             <div className="grid gap-3">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" {...register("password")} />
+              <Input
+                autoComplete="new-password"
+                id="password"
+                type="password"
+                {...register("password")}
+              />
               {errors.password && (
                 <p className="text-sm text-red-500">
                   {errors.password.message}
@@ -94,6 +105,7 @@ export function SignupForm({
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
               </div>
               <Input
+                autoComplete="new-password"
                 id="confirmPassword"
                 type="password"
                 {...register("confirmPassword")}
@@ -108,7 +120,12 @@ export function SignupForm({
             {/* City Name */}
             <div className="grid gap-3">
               <Label htmlFor="city">Your City Name</Label>
-              <Input id="city" type="text" {...register("city")} />
+              <Input
+                autoComplete="address-level2"
+                id="city"
+                type="text"
+                {...register("city")}
+              />
               {errors.city && (
                 <p className="text-sm text-red-500">{errors.city.message}</p>
               )}
@@ -118,6 +135,7 @@ export function SignupForm({
             <div className="grid gap-3">
               <Label htmlFor="phoneNumber">Phone Number</Label>
               <Input
+                autoComplete="tel-national"
                 id="phoneNumber"
                 type="text"
                 placeholder="e.g: 0123456789 (Optional)"
