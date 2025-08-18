@@ -19,6 +19,8 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 
+import "@geoapify/geocoder-autocomplete/styles/round-borders.css";
+
 export function AddressUpdater({
   allAddresses,
   setAllAddresses,
@@ -47,6 +49,7 @@ export function AddressUpdater({
     defaultValues: initialAddress,
   });
 
+  // Reset form on edit
   useEffect(() => {
     if (mode === "edit" && initialAddress) {
       reset(initialAddress);
@@ -57,23 +60,26 @@ export function AddressUpdater({
   const onSubmit = async (data: AddressForm) => {
     if (isSubmitting) return;
 
+    // Prevent submission if no changes
     if (mode === "edit" && initialAddress) {
-      if (
-        data.area === initialAddress.area &&
-        data.street === initialAddress.street &&
+      const unchanged =
+        data.house_building === initialAddress.house_building &&
+        data.street_area === initialAddress.street_area &&
         data.city === initialAddress.city &&
         data.postalCode === initialAddress.postalCode &&
-        data.province === initialAddress.province
-      ) {
+        data.province === initialAddress.province;
+
+      if (unchanged) {
         errorToast("No changes detected. Please modify the address.");
         return;
       }
     }
 
+    // Prevent duplicate
     const existingAddress = allAddresses.find(
       (addr) =>
-        addr.area === data.area &&
-        addr.street === data.street &&
+        addr.house_building === data.house_building &&
+        addr.street_area === data.street_area &&
         addr.city === data.city &&
         addr.postalCode === data.postalCode &&
         addr.province === data.province
@@ -89,7 +95,7 @@ export function AddressUpdater({
       const url =
         mode === "edit"
           ? `/users/address/${initialAddress?._id}`
-          : `/users/address`;
+          : "/users/address";
 
       const response = await fetch(import.meta.env.VITE_API_BASE_URL + url, {
         method,
@@ -114,6 +120,7 @@ export function AddressUpdater({
       }
 
       const result = await response.json();
+
       successToast(mode === "edit" ? "Address updated." : "Address added.");
 
       setAllAddresses((prev) => {
@@ -144,37 +151,45 @@ export function AddressUpdater({
         </DialogTitle>
 
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
-          {/* Area */}
+          {/* House/Building */}
           <div className="grid gap-2">
-            <Label htmlFor="area">Area</Label>
+            <Label htmlFor="house_building">House / Building</Label>
             <Input
-              id="area"
-              placeholder="Detailed Area"
-              {...register("area")}
+              autoComplete="address-line1"
+              id="house_building"
+              placeholder="e.g. Block No. 4 House No. 18"
+              {...register("house_building")}
             />
-            {errors.area && (
-              <p className="text-sm text-red-600">{errors.area.message}</p>
+
+            {errors.house_building && (
+              <p className="text-sm text-red-600">
+                {errors.house_building.message}
+              </p>
             )}
           </div>
 
-          {/* Street */}
+          {/* Street/Area */}
           <div className="grid gap-2">
-            <Label htmlFor="street">Street</Label>
+            <Label htmlFor="street">Area / Street</Label>
             <Input
+              autoComplete="address-line2"
               id="street"
-              placeholder="e.g., Street No. 12"
-              {...register("street")}
+              placeholder="e.g. Fort Road"
+              {...register("street_area")}
             />
-            {errors.street && (
-              <p className="text-sm text-red-600">{errors.street.message}</p>
+            {errors.street_area && (
+              <p className="text-sm text-red-600">
+                {errors.street_area.message}
+              </p>
             )}
           </div>
 
-          {/* City + Postal Code side by side */}
+          {/* City + Postal Code */}
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="city">City</Label>
               <Input
+                autoComplete="address-level2"
                 id="city"
                 placeholder="e.g., Lahore"
                 {...register("city")}
@@ -187,6 +202,7 @@ export function AddressUpdater({
             <div className="grid gap-2">
               <Label htmlFor="postalCode">Postal Code</Label>
               <Input
+                autoComplete="postal-code"
                 id="postalCode"
                 placeholder="e.g., 54000"
                 {...register("postalCode")}
@@ -203,6 +219,7 @@ export function AddressUpdater({
           <div className="grid gap-2">
             <Label htmlFor="province">Province</Label>
             <Select
+              autoComplete="address-level1"
               defaultValue={initialAddress?.province}
               onValueChange={(value) =>
                 setValue("province", value as AddressForm["province"])

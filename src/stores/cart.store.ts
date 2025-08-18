@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { CartItem, CartStore } from "@/types/cart.type";
+import type { BuyNowStore, CartItem, CartStore } from "@/types/cart.type";
 
 // Persistent cart store with localStorage
 export const cartStore = create<CartStore>()(
@@ -26,6 +26,27 @@ export const cartStore = create<CartStore>()(
               : item
           ),
         })),
+    }),
+    {
+      name: "cart-storage", // key in localStorage
+    }
+  )
+);
+
+export const buyNowItem = create<BuyNowStore>()(
+  persist(
+    (set) => ({
+      cartItem: null,
+
+      setItem: (item: CartItem) =>
+        set(() => ({
+          cartItem: item,
+        })),
+
+      removeItem: () =>
+        set({
+          cartItem: null,
+        }),
     }),
     {
       name: "cart-storage", // key in localStorage

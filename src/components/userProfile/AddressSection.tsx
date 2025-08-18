@@ -16,8 +16,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
-import { AddressUpdater } from "./AddressUpdater";
 import { UseFetchAddresses } from "../../functions/useFetchAdresses";
+import { AddressUpdater } from "./AddressUpdater";
+import { errorToast, successToast } from "../global/Toasts";
 
 const formatPostal = (code: string) =>
   code && code.trim().length > 0 ? code : "—";
@@ -37,6 +38,30 @@ const AddressSection: React.FC = function AddressSection() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
   const [selectedAddress, setSelectedAddress] = useState<Address | undefined>();
+
+  const removeAddress = async (addressId: string) => {
+    console.log(addressId);
+    if (!addressId) return;
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/users/address/${addressId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    console.log(response);
+
+    if (response.ok) {
+      fetchAddresses();
+      successToast("Address deleted successfully.");
+    } else {
+      errorToast("Failed to delete address. Please try again.");
+    }
+  };
   return (
     <>
       <AddressUpdater
@@ -51,7 +76,7 @@ const AddressSection: React.FC = function AddressSection() {
       />
 
       {
-        <Card className="bg-white rounded-2xl shadow-md">
+        <Card className="bg-white rounded-2xl shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl">Addresses</CardTitle>
             <CardDescription>Saved delivery locations</CardDescription>
@@ -63,19 +88,19 @@ const AddressSection: React.FC = function AddressSection() {
                 <table className="w-full border-collapse text-sm">
                   <thead className="border-b rounded-sm border-b-gray-200 text-sm font-semibold">
                     <tr className="w-full bg-muted/50">
-                      <th className="text-left font-semibold px-3 py-2">
-                        Area
+                      <th className="text-center font-semibold px-3 py-2">
+                        House / Building No.
                       </th>
-                      <th className="text-left font-semibold px-3 py-2 hidden sm:table-cell">
-                        Street
+                      <th className="text-center font-semibold px-3 py-2 hidden sm:table-cell">
+                        Street / Area
                       </th>
-                      <th className="text-left font-semibold px-3 py-2">
+                      <th className="text-center font-semibold px-3 py-2">
                         City
                       </th>
-                      <th className="text-left font-semibold px-3 py-2 hidden md:table-cell">
+                      <th className="text-center font-semibold px-3 py-2 hidden md:table-cell">
                         Province
                       </th>
-                      <th className="text-left font-semibold px-3 py-2 hidden lg:table-cell">
+                      <th className="text-center font-semibold px-3 py-2 hidden lg:table-cell">
                         Postal Code
                       </th>
                     </tr>
@@ -85,15 +110,17 @@ const AddressSection: React.FC = function AddressSection() {
                       addresses.map((addr, index) => (
                         <Drawer key={index}>
                           <tr className="group transition">
-                            <td className="p-2">{addr.area}</td>
-                            <td className="p-2 hidden sm:table-cell">
-                              {addr.street}
+                            <td className="p-2 text-center">
+                              {addr.house_building}
                             </td>
-                            <td className="p-2">{addr.city}</td>
-                            <td className="p-2 hidden md:table-cell">
+                            <td className="p-2 text-center hidden sm:table-cell">
+                              {addr.street_area}
+                            </td>
+                            <td className="p-2 text-center">{addr.city}</td>
+                            <td className="p-2 text-center hidden md:table-cell">
                               {addr.province}
                             </td>
-                            <td className="p-2 hidden lg:table-cell">
+                            <td className="p-2 text-center hidden lg:table-cell">
                               {formatPostal(addr.postalCode)}
                             </td>
                             <td className="p-2">
@@ -102,10 +129,10 @@ const AddressSection: React.FC = function AddressSection() {
                                   size="icon"
                                   variant="outline"
                                   className="lg:opacity-0 group-hover:opacity-100 transition-opacity border-0"
-                                  aria-label={`details for ${addr.street} address`}
+                                  aria-label={`details for ${addr.street_area} address`}
                                   onClick={() => addr}
                                 >
-                                  <ExternalLink className="text-black" />
+                                  <ExternalLink className="opacity-50" />
                                 </Button>
                               </DrawerTrigger>
                             </td>
@@ -119,14 +146,16 @@ const AddressSection: React.FC = function AddressSection() {
                             <div className="grid grid-cols-1 md:grid-cols-2">
                               <div className="space-y-1 text-md mx-4">
                                 <div>
+                                  <div>
+                                    <span className="font-semibold">
+                                      House / Building No:{" "}
+                                    </span>{" "}
+                                    {addr.house_building}
+                                  </div>
                                   <span className="font-semibold">
-                                    Street:{" "}
+                                    Street / Area:{" "}
                                   </span>{" "}
-                                  {addr.street}
-                                </div>
-                                <div>
-                                  <span className="font-semibold">Area: </span>{" "}
-                                  {addr.area}
+                                  {addr.street_area}
                                 </div>
                                 <div>
                                   <span className="font-semibold">City: </span>{" "}
@@ -157,7 +186,13 @@ const AddressSection: React.FC = function AddressSection() {
                               >
                                 Edit
                               </Button>
-                              <Button onClick={() => {}}>Delete</Button>
+                              <Button
+                                onClick={() => {
+                                  removeAddress(addr._id);
+                                }}
+                              >
+                                Delete
+                              </Button>
                             </div>
                           </DrawerContent>
                         </Drawer>

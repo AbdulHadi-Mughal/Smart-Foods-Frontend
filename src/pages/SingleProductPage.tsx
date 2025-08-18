@@ -61,10 +61,8 @@ const SingleProductPage = () => {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerType, setDrawerType] = useState<
-    "Add to Cart" | "Buy Now" | "Edit Cart Item"
+    "Add to Cart" | "Buy Now" | "Update Cart Item"
   >("Add to Cart");
-
-  console.log(drawerOpen);
 
   if (!product) {
     return <SingleProductPageSkele />;
@@ -154,27 +152,30 @@ const SingleProductPage = () => {
               Rs. {product.price}
             </p>
             {inCart && (
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-green-600 mr-2">Added to Cart.</p>
-                <p
+              <div className="flex items-center gap-1">
+                <p className="text-sm text-green-600 mr-4">Added to Cart.</p>
+                <Button
                   onClick={() => {
-                    setDrawerType("Edit Cart Item");
+                    setDrawerType("Update Cart Item");
                     setDrawerOpen(true);
-                    successToast(`${product.name} removed from Cart`);
                   }}
-                  className="text-sm cursor-pointer underline"
+                  size="sm"
+                  variant="outline"
+                  className="text-xs"
                 >
-                  Remove
-                </p>
-                <p
+                  Update
+                </Button>
+                <Button
                   onClick={() => {
                     removeItem(product.name);
                     successToast("Removed from Cart");
                   }}
-                  className="text-sm cursor-pointer underline"
+                  size="sm"
+                  variant="outline"
+                  className="text-xs"
                 >
                   Remove
-                </p>
+                </Button>
               </div>
             )}
 

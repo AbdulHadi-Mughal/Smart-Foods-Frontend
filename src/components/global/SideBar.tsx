@@ -5,7 +5,8 @@ import {
   Crown, // was FaCrown
   LogIn, // was FiLogIn
   UserPlus, // was IoPersonAdd
-  User, // was FaUser
+  User,
+  ShoppingBasket, // was FaUser
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,7 +34,7 @@ const sidebarPages = [
   {
     title: "Products",
     url: "/products",
-    icon: <ShoppingCart />,
+    icon: <ShoppingBasket />,
   },
   {
     title: "Why Us",
@@ -48,11 +49,11 @@ const sidebarFooter = [
     url: "/users/me",
     icon: <User />,
   },
-  // {
-  //   title: "Cart",
-  //   url: "/cart",
-  //   icon: <MdShoppingCart />,
-  // },
+  {
+    title: "Cart",
+    url: "/cart",
+    icon: <ShoppingCart />,
+  },
   {
     title: "Sign In",
     url: "/sign-in",

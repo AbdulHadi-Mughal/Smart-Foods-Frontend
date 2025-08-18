@@ -9,7 +9,7 @@ import {
 
 const Orders = ({ orders }: { orders: Order[] }) => {
   return (
-    <Card className="bg-white rounded-2xl shadow-md">
+    <Card className="bg-white rounded-2xl shadow-lg">
       <CardHeader>
         <CardTitle className="text-xl">Order History</CardTitle>
         <CardDescription>Recent orders and status</CardDescription>

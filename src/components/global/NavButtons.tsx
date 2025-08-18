@@ -1,13 +1,13 @@
 import { Button } from "../ui/button";
 import { useSidebar } from "../ui/sidebar";
-import { Menu, UserCircle } from "lucide-react";
+import { Menu, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const NavButtons = () => {
   const { toggleSidebar } = useSidebar();
   const navigate = useNavigate();
   const checkAccount = () => {
-    navigate("/users/me");
+    navigate("/cart");
   };
   return (
     <div className="flex space-x-2 items-center px-4">
@@ -15,7 +15,7 @@ const NavButtons = () => {
         <Menu />
       </Button>
       <Button variant="outline" onClick={checkAccount}>
-        <UserCircle />
+        <ShoppingCart />
       </Button>
     </div>
   );

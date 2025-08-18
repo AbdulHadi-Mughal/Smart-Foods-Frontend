@@ -89,9 +89,9 @@ const ProfileInfo = ({ profileInfo, setProfile }: Props) => {
                   aria-label={`Edit ${humanize(keyName)}`}
                 >
                   {display.length > 0 ? (
-                    <Edit className="h-5 w-5 text-gray-600" />
+                    <Edit className="h-5 w-5 opacity-50" />
                   ) : (
-                    <PlusCircle className="h-5 w-5 text-gray-600" />
+                    <PlusCircle className="h-5 w-5 opacity-50" />
                   )}
                 </Button>
               </div>

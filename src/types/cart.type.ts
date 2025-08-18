@@ -10,3 +10,9 @@ export type CartStore = {
   removeItem: (id: string) => void;
   editItem: (editedItem: CartItem) => void;
 };
+
+export type BuyNowStore = {
+  cartItem: CartItem | null;
+  setItem: (item: CartItem) => void;
+  removeItem: () => void;
+};

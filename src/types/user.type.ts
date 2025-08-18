@@ -34,8 +34,8 @@ export type OrderedSpice = {
 export type Address = {
   _id: string;
   userId: string;
-  area: string;
-  street: string;
+  house_building: string;
+  street_area: string;
   city: string;
   province: Province;
   postalCode: string;

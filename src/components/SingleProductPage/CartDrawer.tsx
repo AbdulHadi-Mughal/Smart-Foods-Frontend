@@ -8,18 +8,19 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import type { CartItem } from "@/types/cart.type";
-import { cartStore } from "@/stores/cart.store";
+import { buyNowItem, cartStore } from "@/stores/cart.store";
 import { Image } from "@imagekit/react";
 import type { Spice } from "@/types/spice.type";
 import { CustomWeightPicker } from "./CustomWeights";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { successToast } from "../global/Toasts";
+import { errorToast, successToast } from "../global/Toasts";
+import { useNavigate } from "react-router-dom";
 
 interface CartDrawerProps {
-  setSameCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSameCartOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setNewItem: React.Dispatch<React.SetStateAction<CartItem | null>>;
-  drawerType: "Add to Cart" | "Buy Now" | "Edit Cart Item";
+  drawerType: "Add to Cart" | "Buy Now" | "Update Cart Item";
   isOpen: boolean;
   onClose: () => void;
   product: Spice;
@@ -33,11 +34,15 @@ export default function CartDrawer({
   onClose,
   product,
 }: CartDrawerProps) {
-  const { addItem, cartItems } = cartStore();
+  const { addItem, cartItems, editItem } = cartStore();
+  const { setItem } = buyNowItem();
+
   const [quantity, setQuantity] = useState(1);
   const [selectedWeight, setSelectedWeight] = useState(product.weight);
   const [weightType, setWeightType] = useState<"fixed" | "custom">("fixed");
   const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const totalPrice = useMemo(() => {
     const pricePerGram = product.price / product.weight;
@@ -51,22 +56,38 @@ export default function CartDrawer({
       weight: selectedWeight,
       quantity,
     };
+    setNewItem(newItem);
 
     // Check if item already exists in cart
     const existingItemIndex = cartItems.findIndex(
       (item) => item.name === newItem?.name && item.weight === newItem?.weight
     );
+    // -1 means not found
 
-    if (existingItemIndex !== -1) {
-      setNewItem(newItem);
+    if (
+      existingItemIndex !== -1 &&
+      drawerType === "Add to Cart" &&
+      setSameCartOpen
+    ) {
       setSameCartOpen(true);
       return;
+    } else if (existingItemIndex === -1 && drawerType === "Add to Cart") {
+      addItem(newItem);
+      successToast(`Added ${newItem.name} to cart.`);
+      onClose();
+    } else if (existingItemIndex !== -1 && drawerType === "Update Cart Item") {
+      editItem(newItem);
+      successToast(`${newItem.name} updated successfully.`);
+      onClose();
+    } else if (existingItemIndex === -1 && drawerType === "Update Cart Item") {
+      errorToast("Item not found in cart.");
+      return;
+    } else if (drawerType === "Buy Now") {
+      setItem(newItem);
+      navigate("/checkout?type=buy-now");
+    } else {
+      errorToast("Something went wrong.");
     }
-
-    addItem(newItem);
-    successToast(`Added ${newItem.name} to cart!`);
-    onClose();
-    onClose();
   };
 
   return (
@@ -106,7 +127,7 @@ export default function CartDrawer({
                 <p className="text-sm font-medium">Quantity:</p>
                 <div className="flex items-center gap-2">
                   <Button
-                    disabled={quantity <= 1}
+                    disabled={quantity <= 0}
                     variant="outline"
                     size="icon"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -116,20 +137,26 @@ export default function CartDrawer({
                   <input
                     className="size-8 text-center rounded focus:outline-none"
                     value={quantity}
-                    onChange={(e) => {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      console.log(e.target.value);
+
                       if (e.target.value === "") {
-                        setQuantity(1);
-                        return;
+                        setQuantity(0);
+                      } else if (Number(e.target.value) > 200) {
+                        setQuantity(200);
+                      } else if (!/^\d+$/.test(e.target.value)) return;
+                      else {
+                        setQuantity(Number(e.target.value));
                       }
-                      if (!/^\d+$/.test(e.target.value)) return;
-                      setQuantity(Number(e.target.value));
                     }}
                   />
                   <Button
-                    disabled={quantity >= 500}
+                    disabled={quantity >= 200}
                     variant="outline"
                     size="icon"
-                    onClick={() => setQuantity((q) => q + 1)}
+                    onClick={() =>
+                      setQuantity((q) => (q + 1 >= 200 ? 200 : q + 1))
+                    }
                   >
                     +
                   </Button>
@@ -155,14 +182,23 @@ export default function CartDrawer({
                   >
                     {product.weight}g
                   </Button>
-                  <CustomWeightPicker
-                    weightType={weightType}
-                    selectedWeight={selectedWeight}
-                    onChange={(weight: number) => {
-                      setSelectedWeight(weight);
-                      setWeightType("custom");
+                  <span
+                    onClick={() => {
+                      if (weightType === "fixed") {
+                        setTooltipOpen(true);
+                      }
                     }}
-                  />
+                  >
+                    <CustomWeightPicker
+                      weightType={weightType}
+                      selectedWeight={selectedWeight}
+                      onChange={(weight: number) => {
+                        setSelectedWeight(weight);
+                        setWeightType("custom");
+                      }}
+                    />
+                  </span>
+
                   <Tooltip
                     defaultOpen={false}
                     open={tooltipOpen}
@@ -175,9 +211,9 @@ export default function CartDrawer({
                       className="relative top-1.5 size-5"
                     />
                     <TooltipTrigger />
-                    <TooltipContent>
+                    <TooltipContent className="relative right-5">
                       <p className="max-w-40">
-                        You can choose a custom weight from 600 g to 1000 g, in
+                        You can choose a custom weight from 600g to 1000g, in
                         steps of 50 g.
                       </p>
                     </TooltipContent>
@@ -195,6 +231,13 @@ export default function CartDrawer({
 
           <DrawerFooter>
             <Button
+              disabled={
+                !product.inStock ||
+                quantity <= 0 ||
+                selectedWeight <= 0 ||
+                quantity > 200 ||
+                (selectedWeight > 1000 && weightType === "custom")
+              }
               onClick={handleAddToCart}
               className="w-full max-w-sm mx-auto"
             >

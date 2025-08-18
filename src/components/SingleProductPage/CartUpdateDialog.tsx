@@ -32,16 +32,16 @@ export function CartUpdateDialog({
   };
 
   return (
-    <Dialog open={sameCartOpen} onOpenChange={onClose}>
+    <Dialog open={sameCartOpen} onOpenChange={() => onClose(true)}>
       <DialogContent aria-describedby="dialog-description">
-        <DialogTrigger></DialogTrigger>
+        <DialogTrigger onClick={() => onClose(true)}></DialogTrigger>
         <DialogHeader>
           <DialogTitle>Item Already in Cart</DialogTitle>
         </DialogHeader>
 
         <div className="text-sm text-muted-foreground">
           The item <strong>{newItem.name}</strong> is already in your cart. Do
-          you want to update it with the new details or cancel this action?
+          you want to update it with the new details?
           <Link to="/cart" className="underline ml-1">
             See Cart
           </Link>
