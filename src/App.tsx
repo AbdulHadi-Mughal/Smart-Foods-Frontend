@@ -12,7 +12,7 @@ import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
 import { useServerWarmup } from "./functions/severWarmup";
 import LoadSpinner from "./components/global/Spinner";
-import CheckoutPage from "./pages/CheckoutPage";
+// import CheckoutPage from "./pages/CheckoutPage";
 
 // Lazy-loaded pages
 const WhyUs = lazy(() => import("./pages/WhyUs"));
@@ -43,7 +43,7 @@ function App() {
                 element={<SingleProductPage />}
               />
               <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
+              {/* <Route path="/checkout" element={<CheckoutPage />} /> */}
 
               <Route path="/why-us" element={<WhyUs />} />
 

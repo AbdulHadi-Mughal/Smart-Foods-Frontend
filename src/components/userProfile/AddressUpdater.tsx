@@ -19,8 +19,6 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 
-import "@geoapify/geocoder-autocomplete/styles/round-borders.css";
-
 export function AddressUpdater({
   allAddresses,
   setAllAddresses,
