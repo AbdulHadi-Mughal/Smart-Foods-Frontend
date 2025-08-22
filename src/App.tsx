@@ -7,7 +7,7 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import Footer from "./components/global/Footer";
 import { Toaster } from "./components/ui/sonner";
 import RouteChange from "./components/global/RouteChanges";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
 import { useServerWarmup } from "./functions/severWarmup";
@@ -25,9 +25,12 @@ const CartPage = lazy(() => import("./pages/CartPage"));
 
 function App() {
   useServerWarmup();
-  toast.info(
-    "This website is still under development, so errors are expected."
-  );
+
+  useEffect(() => {
+    toast.info(
+      "This website is still under development, so errors are expected."
+    );
+  }, []);
 
   return (
     <SidebarProvider defaultOpen={false}>
