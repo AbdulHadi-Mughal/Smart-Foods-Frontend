@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
 import { useServerWarmup } from "./functions/severWarmup";
 import LoadSpinner from "./components/global/Spinner";
+import { toast } from "sonner";
 // import CheckoutPage from "./pages/CheckoutPage";
 
 // Lazy-loaded pages
@@ -24,6 +25,9 @@ const CartPage = lazy(() => import("./pages/CartPage"));
 
 function App() {
   useServerWarmup();
+  toast.info(
+    "This website is still under development, so errors are expected."
+  );
 
   return (
     <SidebarProvider defaultOpen={false}>
