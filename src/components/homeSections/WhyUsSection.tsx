@@ -13,7 +13,7 @@ const WhyUsSection = () => {
           professional spice systems that make every dish consistent and cost ‑
           efficient.
         </p>
-        <ul className="list-inside  text-left space-y-3 mb-6 pl-6">
+        <ul className="list-inside text-left lg:text-center lg:relative lg:right-4 space-y-3 mb-6 pl-6">
           <li className="text-base">
             <p className="text-green-500 inline text-xl">• </p>{" "}
             Professional‑grade recipes — perfect results, every time

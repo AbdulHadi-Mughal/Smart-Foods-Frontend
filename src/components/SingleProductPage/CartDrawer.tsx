@@ -60,34 +60,43 @@ export default function CartDrawer({
 
     // Check if item already exists in cart
     const existingItemIndex = cartItems.findIndex(
-      (item) => item.name === newItem?.name && item.weight === newItem?.weight
+      (item) => item.name === newItem?.name
     );
     // -1 means not found
 
-    if (
-      existingItemIndex !== -1 &&
-      drawerType === "Add to Cart" &&
-      setSameCartOpen
-    ) {
-      setSameCartOpen(true);
-      return;
-    } else if (existingItemIndex === -1 && drawerType === "Add to Cart") {
-      addItem(newItem);
-      successToast(`Added ${newItem.name} to cart.`);
-      onClose();
-    } else if (existingItemIndex !== -1 && drawerType === "Update Cart Item") {
-      editItem(newItem);
-      successToast(`${newItem.name} updated successfully.`);
-      onClose();
-    } else if (existingItemIndex === -1 && drawerType === "Update Cart Item") {
-      errorToast("Item not found in cart.");
-      return;
-    } else if (drawerType === "Buy Now") {
+    if (drawerType === "Add to Cart") {
+      if (existingItemIndex !== -1 && setSameCartOpen) {
+        setSameCartOpen(true);
+        return;
+      }
+      if (existingItemIndex === -1) {
+        addItem(newItem);
+        successToast(`Added ${newItem.name} to cart.`);
+        onClose();
+        return;
+      }
+    }
+
+    if (drawerType === "Update Cart Item") {
+      if (existingItemIndex !== -1) {
+        editItem(newItem);
+        successToast(`${newItem.name} updated successfully.`);
+        onClose();
+        return;
+      }
+      if (existingItemIndex === -1) {
+        errorToast("Item not found in cart.");
+        return;
+      }
+    }
+
+    if (drawerType === "Buy Now") {
       setItem(newItem);
       navigate("/checkout?type=buy-now");
-    } else {
-      errorToast("Something went wrong.");
+      return;
     }
+
+    errorToast("Something went wrong.");
   };
 
   return (

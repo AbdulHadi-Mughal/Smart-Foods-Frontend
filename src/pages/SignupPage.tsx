@@ -8,6 +8,7 @@ import {
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { errorToast, successToast } from "../components/global/Toasts";
+import { useUserStore } from "@/stores/user.store";
 
 function SignupPage() {
   const {
@@ -23,6 +24,8 @@ function SignupPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const RedirectionURL = searchParams.get("from");
+
+  const { setProfile } = useUserStore();
 
   const onSubmit = async (formData: SignupFormData) => {
     const { username, email, password, city, phoneNumber } = formData;
@@ -54,12 +57,18 @@ function SignupPage() {
 
       const data = await response.json();
       if (response.ok) {
+        setUserExists(false);
+        setProfile("customer");
         successToast("Signup successful! Redirecting...");
         setTimeout(() => {
           navigate(RedirectionURL || "/");
         }, 1000);
       } else if (data && data.existingUser) {
         setUserExists(true);
+      } else if (response.status === 400) {
+        errorToast("Signup failed! Please try again later.");
+      } else {
+        errorToast("Something went wrong! Please try again later.");
       }
     } catch {
       errorToast("Something went wrong! Please try again later.");

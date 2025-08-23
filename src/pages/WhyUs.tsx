@@ -38,7 +38,7 @@ const WhyUs = () => {
   return (
     <section className="w-full bg-white text-foreground pb-16 md:pb-24">
       {/* Header */}
-      <div className="relative w-full h-48 md:h-56 lg:h-64 flex items-center justify-center text-center overflow-hidden">
+      <div className="relative w-full h-56 flex items-center justify-center text-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center before:absolute before:inset-0 before:bg-black before:opacity-60"
           style={{
@@ -76,7 +76,7 @@ const WhyUs = () => {
       </div>
 
       {/* Call to Action */}
-      <div className="max-w-5xl mx-auto mt-16 flex flex-col sm:flex-row items-center rounded-xl overflow-hidden shadow-lg">
+      <div className="max-w-3xl mx-auto mt-16 flex flex-col sm:flex-row items-center rounded-xl overflow-hidden shadow-lg">
         <div className="mx-auto sm:w-1/2 px-20 sm:px-8">
           <img
             src={phoneImage}

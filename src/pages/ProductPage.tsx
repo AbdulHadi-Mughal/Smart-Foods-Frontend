@@ -7,7 +7,9 @@ import { errorToast } from "@/components/global/Toasts";
 import ProductCard from "../components/productsPage/ProductCard";
 
 const ProductPage = () => {
-  const [filteredProducts, setFilteredProducts] = useState<SpiceCardInfo[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<
+    SpiceCardInfo[] | null
+  >();
   const [categroizedProducts, setCatagorizedProducts] = useState<
     SpiceCardInfo[]
   >([]);
@@ -39,6 +41,7 @@ const ProductPage = () => {
         setFilteredProducts(products.current);
       } catch {
         errorToast("Something went wrong! Please try again later.");
+        setFilteredProducts(null);
       }
     };
 

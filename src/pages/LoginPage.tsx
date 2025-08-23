@@ -8,6 +8,7 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { errorToast, successToast } from "../components/global/Toasts";
 import { useState } from "react";
+import { useUserStore } from "@/stores/user.store";
 
 function LoginPage() {
   const {
@@ -23,6 +24,8 @@ function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const RedirectionURL = searchParams.get("from");
+
+  const { setProfile } = useUserStore();
 
   const loginUser = async (data: LoginFormData) => {
     try {
@@ -43,12 +46,17 @@ function LoginPage() {
         }
       );
       if (response.ok) {
+        setProfile("customer");
         successToast("Login successful! Redirecting...");
         setTimeout(() => {
           navigate(RedirectionURL || "/");
         }, 1000);
       } else {
-        setInvalid(true);
+        if (response.status === 400) {
+          setInvalid(true);
+        } else {
+          errorToast("Login failed! Please try again later.");
+        }
       }
     } catch {
       errorToast("Login failed! Please try again later.");

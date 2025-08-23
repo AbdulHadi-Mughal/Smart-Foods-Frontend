@@ -26,6 +26,7 @@ export const cartStore = create<CartStore>()(
               : item
           ),
         })),
+      resetItems: () => set({ cartItems: [] }),
     }),
     {
       name: "cart-storage", // key in localStorage

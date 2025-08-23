@@ -12,6 +12,7 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -24,9 +25,9 @@ const ProfilePage = () => {
         else if (!res.ok) throw new Error("Fetch failed");
         const data: User = await res.json();
         setProfile(data);
-      } catch (err) {
-        console.log(err);
+      } catch {
         errorToast("Something went wrong! Please try again later.");
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -42,6 +43,17 @@ const ProfilePage = () => {
       </>
     );
   }
+
+  if (error)
+    return (
+      <div className="container mx-auto px-4 py-12 flex flex-col items-center text-center space-y-4 mb-24 mt-12">
+        <h2 className="text-xl font-semibold">We couldn’t load your profile</h2>
+        <p className="text-muted-foreground max-w-sm">
+          It looks like something went wrong while connecting to our server.
+          Please try refreshing the page, or come back in a little while.
+        </p>
+      </div>
+    );
 
   if (!profile || !authorized) {
     return <UnauthorizedSection />;

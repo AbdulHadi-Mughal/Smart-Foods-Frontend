@@ -2,8 +2,10 @@ import React, { useRef, useEffect } from "react";
 import type { SpiceCardInfo } from "../../types/spice.type";
 
 interface SearcherProps {
-  products: SpiceCardInfo[];
-  setFilteredProducts: React.Dispatch<React.SetStateAction<SpiceCardInfo[]>>;
+  products: SpiceCardInfo[] | null | undefined;
+  setFilteredProducts: React.Dispatch<
+    React.SetStateAction<SpiceCardInfo[] | null | undefined>
+  >;
 }
 
 const Searcher: React.FC<SearcherProps> = ({
@@ -14,6 +16,7 @@ const Searcher: React.FC<SearcherProps> = ({
   const handleInputChange = (inputValue: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
+    if (products === null || products === undefined) return;
     timeoutRef.current = setTimeout(() => {
       const filtered = products.filter((product) =>
         product.name.toLowerCase().includes(inputValue.toLowerCase())

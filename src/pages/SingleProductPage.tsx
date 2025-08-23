@@ -194,8 +194,9 @@ const SingleProductPage = () => {
               <Button
                 size="lg"
                 onClick={() => {
-                  setDrawerType("Buy Now");
-                  setDrawerOpen(true);
+                  infoToast("Buy Now");
+                  // setDrawerType("Buy Now");
+                  // setDrawerOpen(true);
                 }}
                 variant="secondary"
                 className="w-full sm:w-2/5"
