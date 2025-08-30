@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="flex justify-center bg-white">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-4 py-14 text-gray-700 max-w-7xl">
         {/* Column 1: Brand Info */}
-        <div className="flex items-start space-x-3 my-2 px-4 py-2 border-r border-r-gray-200">
+        <div className="flex items-start space-x-3 my-2 px-4 py-2 md:border-r border-r-gray-200">
           <Image
             loading="lazy"
             src="/Static%20Files/smart_food_logo.webp"
@@ -20,7 +20,7 @@ const Footer = () => {
         </div>
 
         {/* Column 2: Navigation */}
-        <div className="text-sm px-4 py-2 border-r border-r-gray-200">
+        <div className="text-sm px-4 py-2 md:border-r border-r-gray-200">
           <h4 className="font-semibold mb-2">Quick Links</h4>
           <ul className="space-y-2">
             <li>
@@ -39,7 +39,7 @@ const Footer = () => {
         </div>
 
         {/* Column 3: Social */}
-        <div className="text-sm text-center md:text-left px-4 py-2 border-r border-r-gray-200">
+        <div className="text-sm text-center md:text-left px-4 py-2 md:border-r border-r-gray-200">
           <div className="my-4">
             <h4 className="font-semibold mb-2">Contact</h4>
             <p className="text-sm">0300-9448933</p>

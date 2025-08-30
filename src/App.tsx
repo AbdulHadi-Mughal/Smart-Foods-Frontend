@@ -18,18 +18,24 @@ import { toast } from "sonner";
 // Lazy-loaded pages
 const WhyUs = lazy(() => import("./pages/WhyUs"));
 const SingleProductPage = lazy(() => import("./pages/SingleProductPage"));
-const LoginPage = lazy(() => import("./pages/LoginPage"));
-const SignupPage = lazy(() => import("./pages/SignupPage"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const SignupPage = lazy(() => import("./pages/auth/SignupPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const CartPage = lazy(() => import("./pages/CartPage"));
+
+// Legal
+const PrivacyPolicyPage = lazy(() => import("./pages/legal/PrivacyPolicyPage"));
+const TermsPage = lazy(() => import("./pages/legal/TermsPage"));
+const ShippingPolicyPage = lazy(
+  () => import("./pages/legal/ShippingPolicyPage")
+);
+const RefundPolicyPage = lazy(() => import("./pages/legal/RefundPolicyPage"));
 
 function App() {
   useServerWarmup();
 
   useEffect(() => {
-    toast.info(
-      "This website is still under development, so errors are expected."
-    );
+    toast.info("This website is under development, so errors are expected.");
   }, []);
 
   return (
@@ -58,6 +64,15 @@ function App() {
               <Route path="/create-account" element={<SignupPage />} />
 
               <Route path="/users/me" element={<ProfilePage />} />
+
+              {/* Legal pages */}
+              <Route
+                path="/legal/privacy-policy"
+                element={<PrivacyPolicyPage />}
+              />
+              <Route path="/legal/terms" element={<TermsPage />} />
+              <Route path="/legal/shipping" element={<ShippingPolicyPage />} />
+              <Route path="/legal/refunds" element={<RefundPolicyPage />} />
             </Routes>
           </Suspense>
 

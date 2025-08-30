@@ -1,14 +1,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginForm } from "../components/auth/LoginForm";
-import {
-  loginSchema,
-  type LoginFormData,
-} from "../lib/zodSchemas/login.schema";
+
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { errorToast, successToast } from "../components/global/Toasts";
 import { useState } from "react";
 import { useUserStore } from "@/stores/user.store";
+import { loginSchema, type LoginFormData } from "@/lib/zodSchemas/login.schema";
+import { errorToast, successToast } from "@/components/global/Toasts";
+import { LoginForm } from "@/components/auth/LoginForm";
 
 function LoginPage() {
   const {

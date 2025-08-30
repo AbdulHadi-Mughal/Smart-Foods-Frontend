@@ -176,7 +176,7 @@ export function SideBar() {
                           asChild
                           className={
                             item.destructive
-                              ? "bg-primary hover:bg-primary/90 text-white hover:text-white active:bg-primary/90 active:text-white"
+                              ? "bg-primary cursor-pointer hover:bg-primary/90 text-white hover:text-white active:bg-primary/90 active:text-white"
                               : ""
                           }
                         >
