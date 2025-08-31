@@ -46,6 +46,7 @@
     "zustand": "^5.0.7"
   },
   "devDependencies": {
+    "@babel/plugin-transform-named-capturing-groups-regex": "^7.27.1",
     "@eslint/js": "^9.30.1",
     "@types/node": "^24.0.13",
     "@types/react": "^19.1.8",
