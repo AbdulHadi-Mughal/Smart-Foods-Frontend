@@ -1,24 +1,23 @@
-import { Button } from "../ui/button";
-import { useSidebar } from "../ui/sidebar";
-import { Menu, ShoppingCart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { Button } from '../ui/button';
+import { useSidebar } from '../ui/sidebar';
+import { Menu, ShoppingCart } from 'lucide-react';
 
 const NavButtons = () => {
-  const { toggleSidebar } = useSidebar();
-  const navigate = useNavigate();
-  const checkAccount = () => {
-    navigate("/cart");
-  };
-  return (
-    <div className="flex space-x-2 items-center px-4">
-      <Button variant="outline" onClick={toggleSidebar}>
-        <Menu />
-      </Button>
-      <Button variant="outline" onClick={checkAccount}>
-        <ShoppingCart />
-      </Button>
-    </div>
-  );
+	const { toggleSidebar } = useSidebar();
+
+	return (
+		<div className="flex items-center space-x-2 px-4">
+			<Button variant="outline" onClick={toggleSidebar}>
+				<Menu />
+			</Button>
+			<Link to="/products">
+				<Button variant="outline">
+					<ShoppingCart />
+				</Button>
+			</Link>
+		</div>
+	);
 };
 
 export default NavButtons;

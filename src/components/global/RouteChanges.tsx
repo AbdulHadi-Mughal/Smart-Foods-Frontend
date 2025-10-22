@@ -1,14 +1,16 @@
-// src/components/ScrollToTop.tsx
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function RouteChange() {
-  const { pathname } = useLocation();
+	const { pathname } = useLocation();
 
-  useEffect(() => {
-    // Scroll to top-left
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [pathname]);
+	useEffect(() => {
+		// Scroll to top-left
+		const scrollDistance = Math.abs(window.scrollY);
+		console.log('Scroll distance:', scrollDistance);
+		const behavior = scrollDistance > 750 ? 'instant' : 'smooth';
+		window.scrollTo({ top: 0, left: 0, behavior });
+	}, [pathname]);
 
-  return null; // This component doesn't render anything
+	return null; // This component doesn't render anything
 }
